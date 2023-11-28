@@ -1,0 +1,656 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "GTFS API",
+    "version": "1.0.0",
+    "description": "An API for accessing General Transit Feed Specification (GTFS) data."
+  },
+  "paths": {
+    "/agencies": {
+      "get": {
+        "tags": ["Agency"],
+        "summary": "Get a list of transit agencies",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "agencies": [
+                    {
+                      "$ref": "#/components/schemas/Agency"
+                    },
+                    {
+                      "agency_id": "1",
+                      "agency_name": "City Transit",
+                      "agency_url": "http://www.citytransit.com",
+                      "agency_timezone": "America/New_York"
+                    },
+                    {
+                      "agency_id": "2",
+                      "agency_name": "County Transit",
+                      "agency_url": "http://www.countytransit.com",
+                      "agency_timezone": "America/Los_Angeles"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/routes": {
+      "get": {
+        "tags": ["Route"],
+        "summary": "Get a list of transit routes",
+        "parameters": [
+          {
+            "name": "agency_id",
+            "in": "query",
+            "description": "ID of the transit agency",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "routes": [
+                    {
+                      "$ref": "#/components/schemas/Route"
+                    },
+                    {
+                      "route_id": "101",
+                      "route_short_name": "A",
+                      "route_long_name": "Downtown Express",
+                      "route_type": 3
+                    },
+                    {
+                      "route_id": "102",
+                      "route_short_name": "B",
+                      "route_long_name": "Uptown Local",
+                      "route_type": 3
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stops": {
+      "get": {
+        "tags": ["Stop"],
+        "summary": "Get a list of transit stops",
+        "parameters": [
+          {
+            "name": "route_id",
+            "in": "query",
+            "description": "ID of the transit route",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "stops": [
+                    {
+                      "$ref": "#/components/schemas/Stop"
+                    },
+                    {
+                      "stop_id": "1001",
+                      "stop_name": "Main St Station",
+                      "stop_lat": 40.7128,
+                      "stop_lon": -74.006
+                    },
+                    {
+                      "stop_id": "1002",
+                      "stop_name": "Central Ave",
+                      "stop_lat": 34.0522,
+                      "stop_lon": -118.2437
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trips": {
+      "get": {
+        "tags": ["Trip"],
+        "summary": "Get a list of transit trips",
+        "parameters": [
+          {
+            "name": "route_id",
+            "in": "query",
+            "description": "ID of the transit route",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "trips": [
+                    {
+                      "$ref": "#/components/schemas/Trip"
+                    },
+                    {
+                      "trip_id": "10001",
+                      "route_id": "101",
+                      "service_id": "weekday",
+                      "trip_headsign": "Downtown"
+                    },
+                    {
+                      "trip_id": "10002",
+                      "route_id": "102",
+                      "service_id": "weekday",
+                      "trip_headsign": "Uptown"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stop_times": {
+      "get": {
+        "tags": ["Stop Time"],
+        "summary": "Get a list of stop times for a specific trip",
+        "parameters": [
+          {
+            "name": "trip_id",
+            "in": "query",
+            "description": "ID of the transit trip",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "stop_times": [
+                    {
+                      "$ref": "#/components/schemas/StopTime"
+                    },
+                    {
+                      "trip_id": "10001",
+                      "stop_sequence": 1,
+                      "stop_id": "1001",
+                      "arrival_time": "08:00:00",
+                      "departure_time": "08:02:00"
+                    },
+                    {
+                      "trip_id": "10001",
+                      "stop_sequence": 2,
+                      "stop_id": "1002",
+                      "arrival_time": "08:10:00",
+                      "departure_time": "08:12:00"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calendar": {
+      "get": {
+        "tags": ["Calendar"],
+        "summary": "Get a list of service calendars",
+        "parameters": [
+          {
+            "name": "service_id",
+            "in": "query",
+            "description": "ID of the transit service",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "calendar": [
+                    {
+                      "$ref": "#/components/schemas/Calendar"
+                    },
+                    {
+                      "service_id": "weekday",
+                      "monday": 1,
+                      "tuesday": 1,
+                      "wednesday": 1,
+                      "thursday": 1,
+                      "friday": 1,
+                      "saturday": 0,
+                      "sunday": 0,
+                      "start_date": "20230101",
+                      "end_date": "20231231"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calendar_dates": {
+      "get": {
+        "tags": ["Calendar Dates"],
+        "summary": "Get a list of calendar dates",
+        "parameters": [
+          {
+            "name": "service_id",
+            "in": "query",
+            "description": "ID of the transit service",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "calendar_dates": [
+                    {
+                      "$ref": "#/components/schemas/CalendarDate"
+                    },
+                    {
+                      "service_id": "weekday",
+                      "date": "20230102",
+                      "exception_type": 1
+                    },
+                    {
+                      "service_id": "weekday",
+                      "date": "20230103",
+                      "exception_type": 2
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shapes": {
+      "get": {
+        "tags": ["Shape"],
+        "summary": "Get a list of shapes for a specific route",
+        "parameters": [
+          {
+            "name": "route_id",
+            "in": "query",
+            "description": "ID of the transit route",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "shapes": [
+                    {
+                      "$ref": "#/components/schemas/Shape"
+                    },
+                    {
+                      "shape_id": "shape101",
+                      "shape_pt_lat": 40.7128,
+                      "shape_pt_lon": -74.006,
+                      "shape_pt_sequence": 1
+                    },
+                    {
+                      "shape_id": "shape101",
+                      "shape_pt_lat": 34.0522,
+                      "shape_pt_lon": -118.2437,
+                      "shape_pt_sequence": 2
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/frequencies": {
+      "get": {
+        "tags": ["Frequency"],
+        "summary": "Get a list of frequencies for a specific trip",
+        "parameters": [
+          {
+            "name": "trip_id",
+            "in": "query",
+            "description": "ID of the transit trip",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "frequencies": [
+                    {
+                      "$ref": "#/components/schemas/Frequency"
+                    },
+                    {
+                      "trip_id": "10001",
+                      "start_time": "08:00:00",
+                      "end_time": "10:00:00",
+                      "headway_secs": 300
+                    },
+                    {
+                      "trip_id": "10002",
+                      "start_time": "14:00:00",
+                      "end_time": "16:00:00",
+                      "headway_secs": 240
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transfers": {
+      "get": {
+        "tags": ["Transfer"],
+        "summary": "Get a list of transfers between stops",
+        "parameters": [
+          {
+            "name": "from_stop_id",
+            "in": "query",
+            "description": "ID of the originating transit stop",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to_stop_id",
+            "in": "query",
+            "description": "ID of the destination transit stop",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "transfers": [
+                    {
+                      "$ref": "#/components/schemas/Transfer"
+                    },
+                    {
+                      "from_stop_id": "1001",
+                      "to_stop_id": "1002",
+                      "transfer_type": 0,
+                      "min_transfer_time": 300
+                    },
+                    {
+                      "from_stop_id": "1002",
+                      "to_stop_id": "1001",
+                      "transfer_type": 2,
+                      "min_transfer_time": 180
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "description": "SwaggerHub API Auto Mocking",
+      "url": "https://virtserver.swaggerhub.com/JBHUTCH01/GTFS/1.0.0"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Agency": {
+        "type": "object",
+        "properties": {
+          "agency_id": {
+            "type": "string"
+          },
+          "agency_name": {
+            "type": "string"
+          },
+          "agency_url": {
+            "type": "string"
+          },
+          "agency_timezone": {
+            "type": "string"
+          }
+        }
+      },
+      "Route": {
+        "type": "object",
+        "properties": {
+          "route_id": {
+            "type": "string"
+          },
+          "route_short_name": {
+            "type": "string"
+          },
+          "route_long_name": {
+            "type": "string"
+          },
+          "route_type": {
+            "type": "integer"
+          }
+        }
+      },
+      "Stop": {
+        "type": "object",
+        "properties": {
+          "stop_id": {
+            "type": "string"
+          },
+          "stop_name": {
+            "type": "string"
+          },
+          "stop_lat": {
+            "type": "number"
+          },
+          "stop_lon": {
+            "type": "number"
+          }
+        }
+      },
+      "Trip": {
+        "type": "object",
+        "properties": {
+          "trip_id": {
+            "type": "string"
+          },
+          "route_id": {
+            "type": "string"
+          },
+          "service_id": {
+            "type": "string"
+          },
+          "trip_headsign": {
+            "type": "string"
+          }
+        }
+      },
+      "StopTime": {
+        "type": "object",
+        "properties": {
+          "trip_id": {
+            "type": "string"
+          },
+          "stop_sequence": {
+            "type": "integer"
+          },
+          "stop_id": {
+            "type": "string"
+          },
+          "arrival_time": {
+            "type": "string"
+          },
+          "departure_time": {
+            "type": "string"
+          }
+        }
+      },
+      "Calendar": {
+        "type": "object",
+        "properties": {
+          "service_id": {
+            "type": "string"
+          },
+          "monday": {
+            "type": "integer"
+          },
+          "tuesday": {
+            "type": "integer"
+          },
+          "wednesday": {
+            "type": "integer"
+          },
+          "thursday": {
+            "type": "integer"
+          },
+          "friday": {
+            "type": "integer"
+          },
+          "saturday": {
+            "type": "integer"
+          },
+          "sunday": {
+            "type": "integer"
+          },
+          "start_date": {
+            "type": "string"
+          },
+          "end_date": {
+            "type": "string"
+          }
+        }
+      },
+      "CalendarDate": {
+        "type": "object",
+        "properties": {
+          "service_id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "exception_type": {
+            "type": "integer"
+          }
+        }
+      },
+      "Shape": {
+        "type": "object",
+        "properties": {
+          "shape_id": {
+            "type": "string"
+          },
+          "shape_pt_lat": {
+            "type": "number"
+          },
+          "shape_pt_lon": {
+            "type": "number"
+          },
+          "shape_pt_sequence": {
+            "type": "integer"
+          }
+        }
+      },
+      "Frequency": {
+        "type": "object",
+        "properties": {
+          "trip_id": {
+            "type": "string"
+          },
+          "start_time": {
+            "type": "string"
+          },
+          "end_time": {
+            "type": "string"
+          },
+          "headway_secs": {
+            "type": "integer"
+          }
+        }
+      },
+      "Transfer": {
+        "type": "object",
+        "properties": {
+          "from_stop_id": {
+            "type": "string"
+          },
+          "to_stop_id": {
+            "type": "string"
+          },
+          "transfer_type": {
+            "type": "integer"
+          },
+          "min_transfer_time": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}
